@@ -1,6 +1,6 @@
-# WordPress Setup Script — Debian + BinaryLane + Cloudflare
+# WordPress Setup Script — Debian + Cloudflare
 
-A single script to provision a production-ready WordPress server on a fresh Debian install. Built for [BinaryLane](https://www.binarylane.com.au/) VPS hosting with Cloudflare as the CDN/proxy.
+A single script to provision a production-ready WordPress server on a fresh Debian install. Works with any VPS provider (BinaryLane, DigitalOcean, Hetzner, Vultr, etc.) using Cloudflare as the CDN/proxy.
 
 ## What It Does
 
@@ -28,11 +28,8 @@ A single script to provision a production-ready WordPress server on a fresh Debi
 
 Before running the script:
 
-1. **Fresh Debian server** on BinaryLane with root SSH access
-2. **BinaryLane external firewall** configured in mPanel:
-   - Allow port 80 and 443 from any IP
-   - Allow port 22 (SSH) from your IP only
-   - Deny everything else
+1. **Fresh Debian server** with root SSH access (any VPS provider)
+2. **Firewall** — if your provider has an external firewall, allow ports 80, 443, and 22
 3. **Domain DNS** — A record pointing to your server IP
 4. **Cloudflare** — proxy turned **OFF** (grey cloud) before running the script so Certbot can verify your domain. You turn it back on after.
 
@@ -40,14 +37,15 @@ Before running the script:
 
 ```bash
 # Download the script
-wget https://raw.githubusercontent.com/yourusername/wordpress-server-setup/main/wp-setup.sh
+wget https://raw.githubusercontent.com/blankv15/wp-install-script/main/wp-setup.sh
 
 # Run it as root
 sudo bash wp-setup.sh
 ```
 
 You will be prompted for:
-- Your domain (e.g. `example.com`)
+- Your domain (e.g. `example.com` or `app.example.com`)
+- Whether to include the `www` version (use `n` for subdomains)
 - Your email address (used for SSL cert notifications)
 
 Everything else is automatic.
@@ -88,7 +86,7 @@ Just run `sudo bash wp-setup.sh` again and enter the new domain.
 - **PHP:** PHP-FPM (version auto-detected)
 - **SSL:** Let's Encrypt via Certbot
 - **CDN/Proxy:** Cloudflare
-- **Hosting:** BinaryLane (Australian VPS)
+- **Hosting:** Any Debian VPS provider
 
 ## Notes
 

@@ -30,7 +30,8 @@ echo -e "${BLUE}║       WordPress Setup — Debian + Cloudflare  ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════════╝${NC}"
 echo ""
 
-read -p "Domain (e.g. example.com, no www): " DOMAIN
+read -p "Domain (e.g. example.com or sub.example.com): " DOMAIN
+read -p "Include www version? (y/n — use 'n' for subdomains): " INCLUDE_WWW
 read -p "Email (for SSL cert): " EMAIL
 
 # Derive safe names from domain for DB
@@ -207,7 +208,7 @@ info "Writing Nginx config..."
 cat > "/etc/nginx/sites-available/${DOMAIN}" <<NGINXCONF
 server {
     listen 80;
-    server_name ${DOMAIN} www.${DOMAIN};
+    server_name ${DOMAIN}$([ "$INCLUDE_WWW" = "y" ] && echo " www.${DOMAIN}");
     root ${WP_DIR};
     index index.php index.html;
 
@@ -308,7 +309,11 @@ read -p "Press Enter when ready..."
 
 info "Installing Certbot..."
 apt install -y certbot python3-certbot-nginx
-certbot --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "$EMAIL" --agree-tos --non-interactive
+if [ "$INCLUDE_WWW" = "y" ]; then
+  certbot --nginx -d "${DOMAIN}" -d "www.${DOMAIN}" --email "$EMAIL" --agree-tos --non-interactive
+else
+  certbot --nginx -d "${DOMAIN}" --email "$EMAIL" --agree-tos --non-interactive
+fi
 systemctl enable certbot.timer
 success "SSL certificate installed"
 
