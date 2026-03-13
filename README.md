@@ -36,8 +36,9 @@ Before running the script:
 ## Usage
 
 ```bash
-# Download the script
-wget https://raw.githubusercontent.com/blankv15/wp-install-script/main/wp-setup.sh
+# Clone the repo
+git clone https://github.com/blankv15/wp-install-script.git
+cd wp-install-script
 
 # Run it as root
 sudo bash wp-setup.sh
